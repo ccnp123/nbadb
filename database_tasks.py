@@ -12,7 +12,8 @@ def create_connection():
   database = config.get('postgresql','database')
   username = config.get('postgresql','username')
   password = config.get('postgresql','password')
-  conn_string = "host='" + localhost + "' dbname='" + database + "' user='" + username + "' password='" + password + "'"
+  port = config.get('postgresql', 'port')
+  conn_string = "host='" + localhost + "' port='" + port + "' dbname='" + database + "' user='" + username + "' password='" + password + "'"
   print("Connecting to database...")
   conn = psycopg2.connect(conn_string)
   print("Connection established!")
@@ -33,10 +34,14 @@ def create_table(cursor,table_schema,table_name,column_names):
   doesn't exist, then execute on cursor object. Replace TO with TOV as TO is 
   a Python reserved word.
   """
-  create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + " (" + " varchar(100),".join(column_names) + " varchar(100));"
-  #print(create_table)
-  cursor.execute(create_table.replace(",TO ",",TOV "))
-  #print("Created " + table_schema + "." + table_name + " table")
+  if not column_names:
+    create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + "();"
+  else:
+    create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + " (" + " varchar(100),".join(column_names) + " varchar(100));"
+    create_table = create_table.replace(",TO ",",TOV ")
+  print(create_table)
+  cursor.execute(create_table)
+  print("Created " + table_schema + "." + table_name + " table")
 
 def insert_records(cursor,table_schema,table_name,column_names,records):
   """
@@ -74,6 +79,8 @@ def add_column_to_staging_table(cursor,table_schema,table_name,column_name):
   if check_if_column_exists(cursor,table_schema,table_name,column_name):
     print("Column " + column_name + " already exists in " + table_schema + "." + table_name)
   else:
+    print table_name
+    print column_name
     add_column = "ALTER TABLE " + table_schema + "." + table_name + " ADD COLUMN " + column_name + " varchar(100);"
     #print(add_column)
     cursor.execute(add_column)

@@ -2,3 +2,4 @@
 __pycache__/
 ENV/
 .DS_Store
+nbadb/
