@@ -30,14 +30,14 @@ def create_schema(cursor,table_schema):
 
 def create_table(cursor,table_schema,table_name,column_names):
   """
-  Create staging table with column names of data type varchar(100) if it 
+  Create staging table with column names of data type text if it 
   doesn't exist, then execute on cursor object. Replace TO with TOV as TO is 
   a Python reserved word.
   """
   if not column_names:
     create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + "();"
   else:
-    create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + " (" + " varchar(100),".join(column_names) + " varchar(100));"
+    create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + " (" + " text,".join(column_names) + " varchar(100));"
     create_table = create_table.replace(",TO ",",TOV ")
   print(create_table)
   cursor.execute(create_table)
