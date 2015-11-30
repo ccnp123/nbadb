@@ -39,9 +39,9 @@ def create_table(cursor,table_schema,table_name,column_names):
   else:
     create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + " (" + " text,".join(column_names) + " text);"
     create_table = create_table.replace(",TO ",",TOV ")
-  print(create_table)
+  #print(create_table)
   cursor.execute(create_table)
-  print("Created " + table_schema + "." + table_name + " table")
+  #print("Created " + table_schema + "." + table_name + " table")
 
 def insert_records(cursor,table_schema,table_name,column_names,records):
   """
@@ -55,11 +55,11 @@ def insert_records(cursor,table_schema,table_name,column_names,records):
     insert_values.append(insert_value)
   insert_record = insert_base + ",".join(insert_values) + ";"
   if records != []:
-    print(insert_record)
+    #print(insert_record)
     cursor.execute(insert_record.replace(",TO,",",TOV,"))
     print("Inserted " + str(len(records)) + " records into " + table_schema + "." + table_name)
   else:
-    print("No records to insert into %s.%s" % (table_schema,table_name))
+  #  print("No records to insert into %s.%s" % (table_schema,table_name))
   
 def check_if_column_exists(cursor,table_schema,table_name,column_name):
   """
@@ -77,11 +77,11 @@ def add_column_to_staging_table(cursor,table_schema,table_name,column_name):
   Add column to staging table as long as column does not already exist.
   """
   if check_if_column_exists(cursor,table_schema,table_name,column_name):
-    print("Column " + column_name + " already exists in " + table_schema + "." + table_name)
+  #  print("Column " + column_name + " already exists in " + table_schema + "." + table_name)
   else:
     print table_name
     print column_name
-    add_column = "ALTER TABLE " + table_schema + "." + table_name + " ADD COLUMN " + column_name + " varchar(100);"
+    add_column = "ALTER TABLE " + table_schema + "." + table_name + " ADD COLUMN " + column_name + " text;"
     #print(add_column)
     cursor.execute(add_column)
     #print("Added " + column_name + " to " + table_schema + "." + table_name)
