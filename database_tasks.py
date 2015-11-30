@@ -37,7 +37,7 @@ def create_table(cursor,table_schema,table_name,column_names):
   if not column_names:
     create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + "();"
   else:
-    create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + " (" + " text,".join(column_names) + " varchar(100));"
+    create_table = "CREATE TABLE IF NOT EXISTS " + table_schema + "." + table_name + " (" + " text,".join(column_names) + " text);"
     create_table = create_table.replace(",TO ",",TOV ")
   print(create_table)
   cursor.execute(create_table)
