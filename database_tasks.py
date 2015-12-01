@@ -48,6 +48,10 @@ def insert_records(cursor,table_schema,table_name,column_names,records):
   Insert multiple records with one INSERT statement into table, then execute 
   on cursor object.
   """
+  # Check if each column exists and add missing ones
+  for cn in column_names:
+    add_column_to_staging_table(cursor, table_schema, table_name, cn)
+
   insert_base = "INSERT INTO " + table_schema + "." + table_name + " (" + ",".join(column_names) + ") VALUES "
   insert_values = []
   for record in records:
@@ -58,14 +62,14 @@ def insert_records(cursor,table_schema,table_name,column_names,records):
     #print(insert_record)
     cursor.execute(insert_record.replace(",TO,",",TOV,"))
     print("Inserted " + str(len(records)) + " records into " + table_schema + "." + table_name)
-  else:
+  #else:
   #  print("No records to insert into %s.%s" % (table_schema,table_name))
   
 def check_if_column_exists(cursor,table_schema,table_name,column_name):
   """
   Check if column exists in table given column name.
   """
-  query = "SELECT * FROM information_schema.columns WHERE table_schema = '" + table_schema + "' AND table_name = '" + table_name + "' AND column_name = '" + column_name + "';"
+  query = "SELECT * FROM information_schema.columns WHERE table_schema = '" + table_schema + "' AND table_name = '" + table_name + "' AND column_name = '" + column_name.lower() + "';"
   #print(query)
   cursor.execute(query)
   rows = cursor.fetchall()
@@ -76,14 +80,22 @@ def add_column_to_staging_table(cursor,table_schema,table_name,column_name):
   """
   Add column to staging table as long as column does not already exist.
   """
-  if check_if_column_exists(cursor,table_schema,table_name,column_name):
-  #  print("Column " + column_name + " already exists in " + table_schema + "." + table_name)
-  else:
-    print table_name
-    print column_name
+  #print "Adding column " + column_name
+  if not check_if_column_exists(cursor, table_schema, table_name, column_name):
+    #print "Column " + column_name + " does not exist"
     add_column = "ALTER TABLE " + table_schema + "." + table_name + " ADD COLUMN " + column_name + " text;"
-    #print(add_column)
+    #print add_column
     cursor.execute(add_column)
+    
+
+  #if check_if_column_exists(cursor,table_schema,table_name,column_name):
+    #print("Column " + column_name + " already exists in " + table_schema + "." + table_name)
+  #else:
+    #print table_name
+    #print column_name
+    #add_column = "ALTER TABLE " + table_schema + "." + table_name + " ADD COLUMN " + column_name + " text;"
+    #print(add_column)
+    #cursor.execute(add_column)
     #print("Added " + column_name + " to " + table_schema + "." + table_name)
 
 def update_records(cursor,table_schema,table_name,column_name,value):

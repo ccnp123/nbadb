@@ -36,9 +36,12 @@ def load_staging_tables(conn,urls,id_name):
 
         # Create schema, table, and insert records
         db.create_schema(cursor,table_schema)
+        #conn.commit()
         db.create_table(cursor,table_schema,table_name,column_names)
+        #conn.commit()
         db.insert_records(cursor,table_schema,table_name,column_names,records)
-        
+        #conn.commit()
+
         # Store game IDs for loading game-level data later
         if table_name == 'gameheader':
           for game in data["resultSets"][i]["rowSet"]:
