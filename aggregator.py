@@ -36,9 +36,9 @@ class DataAggregator():
 
   def makeSQL(self):
     sql = []
-    print "schemas: " + str(self.schema_tables)
+    #print "schemas: " + str(self.schema_tables)
     for schema, tables in self.schema_tables.iteritems():
-      print "working on schema " + schema
+      #print "working on schema " + schema
       # create this schema if it does not exist
       create_schema = "CREATE SCHEMA IF NOT EXISTS " + schema + ";"
       sql.append(create_schema)
@@ -46,17 +46,23 @@ class DataAggregator():
         # create table if it does not exist
         comb_name = schema + "." + table
         col_names = self.table_columns[comb_name]
-        create_table = "create table if not exists " + comb_name + " (" + " text,".join(col_names) + " text);"
-        sql.append(create_table)
-        # create bulk insert statement for records
-        header = "insert into " + comb_name + " (" + ",".join(col_names) + ") values "
-        insert_values = []
-        for r in self.table_records[comb_name]:
-          insert_value = "('" + "','".join(str(x).replace("'","''") for x in r) + "')"  
-          insert_values.append(insert_value)
-        insert_records = header + ",".join(insert_values) + ";"
-        insert_records = insert_records.replace(",TO,",",TOV")
-        sql.append(insert_records)
+        if not col_names:
+          print "Error, no column headers"
+        else col_names:
+          create_table = "create table if not exists " + comb_name + " (" + " text,".join(col_names) + " text);"
+          sql.append(create_table)
+          # create bulk insert statement for records
+          header = "insert into " + comb_name + " (" + ",".join(col_names) + ") values "
+          insert_values = []
+          if not self.table_records[comb_name]:
+            print "Error, no records"
+          else:
+            for r in self.table_records[comb_name]:
+              insert_value = "('" + "','".join(str(x).replace("'","''") for x in r) + "')"  
+              insert_values.append(insert_value)
+            insert_records = header + ",".join(insert_values) + ";"
+            insert_records = insert_records.replace(",TO,",",TOV")
+            sql.append(insert_records)
     print "Generated " + str(len(sql)) + " statements"
     return sql
 
