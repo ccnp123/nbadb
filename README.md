@@ -1,4 +1,48 @@
-# nbadb
+# nbadb (v2)
+
+This is a complete overhaul of [alberlyu's nbadb project](https://github.com/albertlyu/nbadb). At this point, most of the original code has been rewritten, and the original project serves more as an idea than something to build on.
+
+The code is being rewritten to be:
+
+### More Useable
+...By fetching data by date, and then by game_id, instead of by resource type
+
+### Faster
+...By using a pool of worker threads and by aggregating many INSERTS into bulk insert statements. For loading small chunks of data, the new version of the code is roughly 10x faster. Performance testing is still being done.
+
+### More Robust
+The code was barely functional when I started. My goal is to be able to scrape every morsel of information about the NBA, with or without schemas or structure.
+
+
+## Overview
+
+Currently there are three flavors of the ```staging``` script.
+
+All three take the same arguments in these three ways
+
+1. ```python staging.py``` will load data for yesterday's games
+2. ```python staging.py 2014-12-25``` will load data for only December 25, 2014
+3. ```python staging.py 2014-12-25 2015-12-1``` will load data from December 25, 2014 to December 1, 2015
+
+The three flavors differ in their efficiency
+1. ```staging.py``` is most similar to the original code and is hanging around to check that the newer version work properly. This is the slowest.
+2. ```staging_multi.py``` adds a pool of worker threads to speed up the downloads
+3. ```staging_multi2.py``` builds on ```staging_multi.py``` by eliminating duplicate queries and aggregating inserts into single insert statements. This is the fastest.
+
+
+
+## Installation Notes
+The original installation instructions found below are pretty good, so please follow those after reading my notes here.
+
+I'm using Windows 8, and I've updated the requirement version for ```psycopg2``` to ```2.6.1```. On my machine, I can ```pip install -r requirements.txt``` without any errors. Hopefully you can to.
+
+I would add that I am using the PowerShell wrapper for virtualenv with good success, and highly recommend [this tutorial](http://www.tylerbutler.com/2012/05/how-to-install-python-pip-and-virtualenv-on-windows-with-powershell/) so you can use it too.
+
+
+
+
+
+# Original Documentation (Unchanged)
 
 ## Overview
 A Python project to extract, transform, and load NBA data into a PostgreSQL database.
@@ -28,7 +72,9 @@ For more details, see the [following link](http://stackoverflow.com/questions/53
 
 Update your config.ini file with your PostgreSQL credentials. You will need to create a new database called 'nbadb,' which you can do so by using PostgreSQL's ```createdb``` wrapper statement in command line or executing a ```CREATE DATABASE``` statement in a psql interpreter.
 
-## ETL Details
+
+
+## ETL Details (Totally deprecated, left for posterity)
 
 ### Staging Layer
 
