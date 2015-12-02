@@ -25,6 +25,7 @@ All three take the same arguments in these three ways
 3. ```python staging.py 2014-12-25 2015-12-1``` will load data from December 25, 2014 to December 1, 2015
 
 The three flavors differ in their efficiency
+
 1. ```staging.py``` is most similar to the original code and is hanging around to check that the newer version work properly. This is the slowest.
 2. ```staging_multi.py``` adds a pool of worker threads to speed up the downloads
 3. ```staging_multi2.py``` builds on ```staging_multi.py``` by eliminating duplicate queries and aggregating inserts into single insert statements. This is the fastest.
