@@ -29,7 +29,7 @@ The flavors differ in their efficiency
 1. ```staging.py``` is most similar to the original code and is hanging around to check that the newer version work properly. This is the slowest.
 2. ```staging_multi.py``` uses a pool of 10 workers and one thread per game to speed up downloads
 3. ```staging_multi2.py``` builds on ```staging_multi.py``` by eliminating duplicate queries and aggregating inserts into single insert statements.
-4. ```staging_multi3.py``` uses a pool of 20 workers and 1 thread per date, in addition to the other enhancements. This is the fastest **by far**.
+4. ```staging_multi3.py``` uses a pool of 20 workers and 1 thread per date, in addition to the other enhancements. This is the fastest **by far**. This loads data from just before the '09 season to Dec. 1 2015 in about an hour.
 
 
 
