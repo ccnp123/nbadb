@@ -16,19 +16,20 @@ The code was barely functional when I started. My goal is to be able to scrape e
 
 ## Overview
 
-Currently there are three flavors of the ```staging``` script.
+Currently there are a few flavors of the ```staging``` script.
 
-All three take the same arguments in these three ways
+All take the same arguments in these three ways
 
 1. ```python staging.py``` will load data for yesterday's games
 2. ```python staging.py 2014-12-25``` will load data for only December 25, 2014
 3. ```python staging.py 2014-12-25 2015-12-1``` will load data from December 25, 2014 to December 1, 2015
 
-The three flavors differ in their efficiency
+The flavors differ in their efficiency
 
 1. ```staging.py``` is most similar to the original code and is hanging around to check that the newer version work properly. This is the slowest.
-2. ```staging_multi.py``` adds a pool of worker threads to speed up the downloads
-3. ```staging_multi2.py``` builds on ```staging_multi.py``` by eliminating duplicate queries and aggregating inserts into single insert statements. This is the fastest.
+2. ```staging_multi.py``` uses a pool of 10 workers and one thread per game to speed up downloads
+3. ```staging_multi2.py``` builds on ```staging_multi.py``` by eliminating duplicate queries and aggregating inserts into single insert statements.
+4. ```staging_multi3.py``` uses a pool of 20 workers and 1 thread per date, in addition to the other enhancements. This is the fastest **by far**.
 
 
 
